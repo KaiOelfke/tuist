@@ -113,6 +113,15 @@ public struct TuistCommand: AsyncParsableCommand {
 
     static func processArguments(_ arguments: [String]? = nil) -> [String]? {
         let arguments = arguments ?? Array(ProcessInfo.processInfo.arguments)
-        return arguments.filter { $0 != "--verbose" }
+        return processSuppressWarningArgument(arguments)
+            .filter { $0 != "--verbose" }
+    }
+
+    private static func processSuppressWarningArgument(_ arguments: [String]) -> [String] {
+        let argument = "--suppress-warnings"
+        if arguments.contains(argument) {
+            WarningController.shared.isSuppressingWarnings = true
+        }
+        return arguments.filter { $0 != argument }
     }
 }

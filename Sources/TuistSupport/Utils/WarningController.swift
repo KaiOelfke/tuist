@@ -5,6 +5,8 @@ import Foundation
  them when the program decides.
  */
 public protocol WarningControlling {
+    /// Prevents any warning to be appended to the warning list
+    var isSuppressingWarnings: Bool { get set }
     /// Appends a new warning to the list of warnings to be shown.
     /// - Parameter warning: The warning to be appended.
     func append(warning: String)
@@ -25,11 +27,14 @@ public final class WarningController: WarningControlling {
         }
     }
 
+    public var isSuppressingWarnings: Bool = false
+
     public static var shared: WarningControlling = WarningController()
 
     init() {}
 
     public func append(warning: String) {
+        guard !isSuppressingWarnings else { return }
         var warnings = warnings
         warnings.insert(warning)
         self.warnings = warnings
